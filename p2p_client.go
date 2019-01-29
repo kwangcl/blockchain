@@ -12,7 +12,7 @@ var CLIENT_MAX_CONNECTION = 2
 
 
 type P2PClient struct {
-	servers map[string]bool
+	servers map[net.Conn]bool
 	node	*P2PNode
 	p2p_server *P2PServer
 }
@@ -98,20 +98,24 @@ func (client *P2PClient)CheckServerMap(address string) bool {
     client_map_lock.RLock()
 	defer client_map_lock.RUnlock()
 
-	_, ok := client.servers[address]
-	return ok
+	for server, _ := range client.servers {
+		if server.address == address {
+			return false
+		}
+	}
+	return true
 }
 
 func (client *P2PClient)WriteServerMap(server *P2PNode) {
 	client_map_lock.Lock()
 	defer client_map_lock.Unlock()
-	client.servers[server.HashKey()] = true
+	client.servers[server] = true
 }
 
 func (client *P2PClient)DeleteServerMap(server *P2PNode) {
 	client_map_lock.Lock()
 	defer client_map_lock.Unlock()
-    delete(client.servers, server.HashKey())
+    delete(client.servers, server)
 }
 
 func (client *P2PClient)IPBroadcast(server *P2PNode) {

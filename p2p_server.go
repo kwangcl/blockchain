@@ -13,7 +13,7 @@ const SERVER_MAX_CONNECTION = 2
 const SERVER_MSG_PORT = 7777
 
 type P2PServer struct {
-	clients map[string]bool
+	clients map[*P2PNode] bool
 	node	*P2PNode
 	p2p_client *P2PClient
 }
@@ -92,10 +92,10 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 }
 
 
-func (server *P2PServer)CheckNewConnection(address string) bool {
-	if !server.CheckClientMap(address) && !server.p2p_client.CheckServerMap(address) {
+func (server *P2PServer)CheckNewConnection(client *P2PNode) bool {
+	if !server.CheckClientMap(client.address) && !server.p2p_client.CheckServerMap(client.address) {
 		return server.CheckClientMapSize()
-    }
+  }
 	return false
 }
 
@@ -120,18 +120,22 @@ func (server *P2PServer)CheckClientMap(address string) bool {
 	server_map_lock.RLock()
 	defer server_map_lock.RUnlock()
 
-	_, ok := server.clients[address]
-	return ok
+	for client, _ := range server.clients {
+		if client.address == address {
+			return false
+		}
+	}
+	return true
 }
 
 func (server *P2PServer)WriteClientMap(client *P2PNode) {
 	server_map_lock.Lock()
 	defer server_map_lock.Unlock()
-	server.clients[client.HashKey()] = true
+	server.clients[client] = true
 }
 
 func (server *P2PServer)DeleteClientMap(client *P2PNode) {
 	server_map_lock.Lock()
 	defer server_map_lock.Unlock()
-	delete(server.clients, client.HashKey())
+	delete(server.clients, client)
 }
