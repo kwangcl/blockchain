@@ -126,7 +126,7 @@ func (msg_manager *P2PMsgManager)SendTransactionMsg(data []byte) []byte {
 
 func (msg_manager *P2PMsgManager)GenSrcData() []byte {
 	str := msg_manager.src_buffer.address + "-"
-	str += strconv.FormatInt(time.Now().Unix(), 10)
+	str += strconv.FormatInt(time.Now().UnixNano(), 10)
 	buf := make([]byte, 30)
 	copy(buf[:], str)
 	fmt.Println("G MSG 1 : " + str)
