@@ -87,7 +87,7 @@ func (client *P2PClient)CheckServerMapSize() bool {
 }
 
 
-func (client *P2PClientr)BroadCastMsg(msg []byte) {
+func (client *P2PClient)BroadCastMsg(msg []byte) {
 	for server, _ := range client.servers {
 			server.outgoing <- msg
 	}

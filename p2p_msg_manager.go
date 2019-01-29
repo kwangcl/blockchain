@@ -76,7 +76,7 @@ func (src_buffer *P2PSrcBuffer)CheckSrcBuf(src string) bool {
 
 
 
-func (msg_manager *P2PMsgManager)IPBroadcastMsg(new_src []byte) []byte {
+func (msg_manager *P2PMsgManager)IPBroadcastMsg() []byte {
 	buf := make([]byte, MAX_MSG_BUF_SIZE)
 	buf[0] = byte(MSG_IP_BROADCAST)
 	src_buf := msg_manager.GenSrcData()

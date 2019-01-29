@@ -58,8 +58,8 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 			//fmt.Println("size : " + strconv.Itoa(len(server.clients)))
 			//fmt.Println(client.address + " : " + client.port + " : " + msg[0])
 			//fmt.Println(msg)
-			msg_type := byte[0]
-			src := byte[1:41]
+			msg_type := msg[0]
+			src := msg[1:41]
 
 			switch msg_type {
 			case MSG_IP_BROADCAST :
