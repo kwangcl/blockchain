@@ -76,37 +76,50 @@ func (src_buffer *P2PSrcBuffer)CheckSrcBuf(src string) bool {
 func (msg_manager *P2PMsgManager)IPBroadcastMsg() []byte {
 	buf := make([]byte, MAX_MSG_BUF_SIZE)
 	buf[0] = byte(MSG_IP_BROADCAST)
+	src_buf := msg_manager.GenSrcData()
+	copy(buf[1:], src_buf)
 	return buf
 }
 
 func (msg_manager *P2PMsgManager)ReceiveIPMsg() []byte {
 	buf := make([]byte, MAX_MSG_BUF_SIZE)
 	buf[0] = byte(MSG_RECEIVE_IP)
+	src_buf := msg_manager.GenSrcData()
+	copy(buf[1:], src_buf)
 	return buf
 }
 
 func (msg_manager *P2PMsgManager)RequestConnMsg() []byte {
 	buf := make([]byte, MAX_MSG_BUF_SIZE)
 	buf[0] = byte(MSG_REQUEST_CONN)
+	src_buf := msg_manager.GenSrcData()
+	copy(buf[1:], src_buf)
 	return buf
 }
 
 func (msg_manager *P2PMsgManager)ApproveConnMsg() []byte {
 	buf := make([]byte, MAX_MSG_BUF_SIZE)
 	buf[0] = byte(MSG_APPROVE_CONN)
+	src_buf := msg_manager.GenSrcData()
+	copy(buf[1:], src_buf)
 	return buf
 }
 
 func (msg_manager *P2PMsgManager)RefuseConnMsg() []byte {
 	buf := make([]byte, MAX_MSG_BUF_SIZE)
 	buf[0] = byte(MSG_REFUSE_CONN)
+	src_buf := msg_manager.GenSrcData()
+	copy(buf[1:], src_buf)
 	return buf
 }
 
 func (msg_manager *P2PMsgManager)SendTransactionMsg(data []byte) []byte {
 	buf := make([]byte, len(data) + 1)
 	buf[0] = byte(MSG_SEND_TRANSACTION)
-	copy(buf[1:], data[:])
+	src_buf := msg_manager.GenSrcData()
+	copy(buf[1:], src_buf)
+	
+	copy(buf[31:], data[:])
 	return buf
 }
 

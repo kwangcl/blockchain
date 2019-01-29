@@ -1,5 +1,5 @@
 package main
-////////////test commit
+
 import (
 	"log"
 	"net"
@@ -17,7 +17,7 @@ func GetIPv4Address() string{
 	for _, addr := range addrs {
 		if ip_net, ok := addr.(*net.IPNet); ok && !ip_net.IP.IsLoopback() {
 			if ip_net.IP.To4() != nil {
-				return ip_net.IP.String() 
+				return ip_net.IP.String()
 			}
 		}
 	}
