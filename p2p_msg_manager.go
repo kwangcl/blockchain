@@ -130,5 +130,6 @@ func (msg_manager *P2PMsgManager)GenSrcData() []byte {
 	buf := make([]byte, 30)
 	copy(buf[:], str)
 	fmt.Println("G MSG 1 : " + str)
+	fmt.Println(buf)
 	return buf[:]
 }
