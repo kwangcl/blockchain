@@ -36,7 +36,7 @@ type P2PSrcBuffer struct {
 
 var src_buffer_lock = sync.RWMutex{}
 
-
+var MsgManager *P2PMsgManager
 
 func NewP2PMsgManager() *P2PMsgManager{
 	address := GetIPv4Address()
@@ -118,7 +118,7 @@ func (msg_manager *P2PMsgManager)SendTransactionMsg(data []byte) []byte {
 	buf[0] = byte(MSG_SEND_TRANSACTION)
 	src_buf := msg_manager.GenSrcData()
 	copy(buf[1:], src_buf)
-	
+
 	copy(buf[31:], data[:])
 	return buf
 }
