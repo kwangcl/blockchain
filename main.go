@@ -16,7 +16,7 @@ func main() {
 	var wg sync.WaitGroup
 	var str string
 
-	MsgManager = NewP2PMsgManager()
+	//MsgManager = NewP2PMsgManager()
 
 
 	addrs, _ := net.InterfaceAddrs()
@@ -29,19 +29,19 @@ func main() {
 		}
 	}
 	str += strconv.FormatInt(time.Now().Unix(),10)
-	
+
 	var a[30]byte
 	copy(a[:], str)
 	fmt.Println(a)
 
 	if len(os.Args) > 1 {
 		p2p_client := NewP2PClient()
-		p2p_server := NewP2PServer(6667)    
+		p2p_server := NewP2PServer(6667)
 
 		p2p_client.p2p_server = p2p_server
 		p2p_server.p2p_client = p2p_client
         wg.Add(1)
-		go func() {           
+		go func() {
 			p2p_server.StartServer()
 			defer wg.Done()
 		}()
@@ -50,7 +50,7 @@ func main() {
 		wg.Wait()
 	} else {
     	p2p_client := NewP2PClient()
-	    p2p_server := NewP2PServer(6666)    
+	    p2p_server := NewP2PServer(6666)
 
 		p2p_client.p2p_server = p2p_server
 		p2p_server.p2p_client = p2p_client
