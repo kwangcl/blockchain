@@ -10,9 +10,14 @@ import (
 )
 
 
+var msg_manager *P2PMsgManager
+
 func main() {
 	var wg sync.WaitGroup
 	var str string
+
+	MsgManager = NewP2PMsgManager()
+
 
 	addrs, _ := net.InterfaceAddrs()
 	for _, addr := range addrs {
