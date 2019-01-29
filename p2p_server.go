@@ -66,7 +66,7 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 				fmt.Println("IP BROADCAST : " + client.address + ", " +  client.port)
 				client.outgoing <- MsgManager.ReceiveIPMsg()
 
-				if server.p2p_client.CheckNewConnection(client.address) {
+				if server.p2p_client.CheckNewConnection(client) {
 					tmp_server := server.p2p_client.ConnectServer(client.address, 6667)
 					server.p2p_client.RequestConn(tmp_server)
 				} else {
@@ -74,7 +74,7 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 				}
 
 			case MSG_REQUEST_CONN :
-				if server.CheckNewConnection(client.address) {
+				if server.CheckNewConnection(client) {
 					client.outgoing <- MsgManager.ApproveConnMsg()
 					server.WriteClientMap(client)
 				} else {

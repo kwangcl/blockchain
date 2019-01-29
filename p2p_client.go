@@ -68,8 +68,8 @@ func (client *P2PClient)ConnectionHandler(server *P2PNode) {
 	}
 }
 
-func (client *P2PClient)CheckNewConnection(address string) bool{
-	if !client.CheckServerMap(address) && !client.p2p_server.CheckClientMap(address) {
+func (client *P2PClient)CheckNewConnection(server *P2PNode) bool{
+	if !client.CheckServerMap(server.address) && !client.p2p_server.CheckClientMap(server.address) {
 		return client.CheckServerMapSize()
 	}
 	return false
