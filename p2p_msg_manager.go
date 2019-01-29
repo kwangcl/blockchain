@@ -4,6 +4,7 @@ import (
 	"sync"
 	"strconv"
 	"time"
+	"fmt"
 )
 
 type MsgState int
@@ -37,7 +38,6 @@ type P2PSrcBuffer struct {
 var src_buffer_lock = sync.RWMutex{}
 
 var MsgManager *P2PMsgManager
-MsgManager = NewP2PMsgManager()
 
 func NewP2PMsgManager() *P2PMsgManager{
 	address := GetIPv4Address()
@@ -129,5 +129,6 @@ func (msg_manager *P2PMsgManager)GenSrcData() []byte {
 	str += strconv.FormatInt(time.Now().Unix(), 10)
 	buf := make([]byte, 30)
 	copy(buf[:], str)
+	fmt.println("G MSG 1 : " + str)
 	return buf[:]
 }

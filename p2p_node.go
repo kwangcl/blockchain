@@ -2,6 +2,7 @@ package main
 
 import (
 	"net"
+	"fmt"
 )
 
 type P2PNetState int
@@ -53,6 +54,7 @@ func (node *P2PNode)Read() {
 			break
 		} else {
 			if MsgManager.CheckNewMsg(buf[1:31]) {
+				fmt.Println(string(buf[1:31]))
 				node.incoming <- buf
 			}
 		}

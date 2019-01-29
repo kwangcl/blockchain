@@ -4,9 +4,9 @@ import (
 	"net"
 	"os"
 	"fmt"
-	"time"
+	_"time"
 	"sync"
-	"strconv"
+	_"strconv"
 )
 
 
@@ -16,19 +16,8 @@ func main() {
 	var wg sync.WaitGroup
 	var str string
 
-	//MsgManager = NewP2PMsgManager()
+	MsgManager = NewP2PMsgManager()
 
-
-	addrs, _ := net.InterfaceAddrs()
-	for _, addr := range addrs {
-		if ip_net, ok := addr.(*net.IPNet); ok && !ip_net.IP.IsLoopback() {
-			if ip_net.IP.To4() != nil {
-				//str = ip_net.IP.String() + "-"
-				str = "255.255.255.255"
-			}
-		}
-	}
-	str += strconv.FormatInt(time.Now().Unix(),10)
 
 	var a[30]byte
 	copy(a[:], str)
