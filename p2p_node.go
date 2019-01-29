@@ -8,7 +8,7 @@ type P2PNetState int
 
 const (
 	P2P_INIT = iota
-	P2P_DEAD_CONN 
+	P2P_DEAD_CONN
 	P2P_WAIT_CONN
 )
 
@@ -23,7 +23,7 @@ type P2PNode struct {
 }
 
 func NewNode(conn net.Conn) *P2PNode {
-	var address, port string	
+	var address, port string
 
 	if conn != nil {
 		client_info := conn.RemoteAddr().String()
@@ -40,7 +40,7 @@ func NewNode(conn net.Conn) *P2PNode {
 	incoming := make(chan []byte)
 	outgoing := make(chan []byte)
 	state := make(chan P2PNetState)
-	
+
 	return &P2PNode{address, port, conn, incoming, outgoing, state}
 }
 
@@ -52,7 +52,9 @@ func (node *P2PNode)Read() {
 			node.state <- P2P_DEAD_CONN
 			break
 		} else {
-			node.incoming <- buf
+			if MsgManager.CheckNewMsg(buf[1:31]) {
+				node.incoming <- buf
+			}
 		}
 	}
 }

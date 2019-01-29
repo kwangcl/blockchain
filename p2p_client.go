@@ -18,7 +18,7 @@ type P2PClient struct {
 }
 
 func NewP2PClient() *P2PClient {
-	
+
 	client_node := NewNode(nil)
 	return &P2PClient{map[string]bool{}, client_node, nil}
 }
@@ -54,8 +54,8 @@ func (client *P2PClient)ConnectionHandler(server *P2PNode) {
 				client.WriteServerMap(server)
 				fmt.Println("Gooo : "  + strconv.Itoa(len(client.servers)))
 			case MSG_REFUSE_CONN :
-				fmt.Println("Refuse....") 
-				break loop 
+				fmt.Println("Refuse....")
+				break loop
 			}
 
 		case state := <-server.state:
@@ -82,7 +82,7 @@ func (client *P2PClient)CheckServerMapSize() bool {
 	if len(client.servers) < CLIENT_MAX_CONNECTION {
 		return true
 	}
-	
+
 	return false
 }
 
@@ -108,11 +108,11 @@ func (client *P2PClient)DeleteServerMap(server *P2PNode) {
 }
 
 func (client *P2PClient)IPBroadcast(server *P2PNode) {
-	buf := IPBroadcastMsg()
+	buf := MsgManager.IPBroadcastMsg()
 	server.outgoing <- buf
 }
 
 func (client *P2PClient)RequestConn(server *P2PNode) {
-	buf := RequestConnMsg()
+	buf := MsgManager.RequestConnMsg()
 	server.outgoing <- buf
 }

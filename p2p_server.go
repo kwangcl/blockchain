@@ -10,7 +10,7 @@ import (
 var server_map_lock = sync.RWMutex{}
 
 const SERVER_MAX_CONNECTION = 2
-const SERVER_MSG_PORT = 7777 
+const SERVER_MSG_PORT = 7777
 
 type P2PServer struct {
 	clients map[string]bool
@@ -20,9 +20,9 @@ type P2PServer struct {
 
 
 func NewP2PServer(port int) *P2PServer {
-	
+
 	server_node := NewNode(nil)
-	server_node.port = strconv.Itoa(port)	
+	server_node.port = strconv.Itoa(port)
 	return &P2PServer{map[string]bool{}, server_node, nil}
 }
 
@@ -51,7 +51,7 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 	go client.Read()
 	go client.Write()
 	defer client.Close()
-	
+
 	loop : for {
 		select {
 		case msg := <-client.incoming:
@@ -61,7 +61,7 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 			switch msg[0] {
 			case MSG_IP_BROADCAST :
 				fmt.Println("IP BROADCAST : " + client.address + ", " +  client.port)
-				client.outgoing <- ReceiveIPMsg()
+				client.outgoing <- MsgManager.ReceiveIPMsg()
 
 				if server.p2p_client.CheckNewConnection(client.address) {
 					tmp_server := server.p2p_client.ConnectServer(client.address, 6667)
@@ -72,10 +72,10 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 
 			case MSG_REQUEST_CONN :
 				if server.CheckNewConnection(client.address) {
-					client.outgoing <- ApproveConnMsg()
+					client.outgoing <- MsgManager.ApproveConnMsg()
 					server.WriteClientMap(client)
 				} else {
-					client.outgoing <- RefuseConnMsg()
+					client.outgoing <- MsgManager.RefuseConnMsg()
 				}
 			}
 		case state := <-client.state:
