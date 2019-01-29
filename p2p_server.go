@@ -23,7 +23,7 @@ func NewP2PServer(port int) *P2PServer {
 
 	server_node := NewNode(nil)
 	server_node.port = strconv.Itoa(port)
-	return &P2PServer{map[string]bool{}, server_node, nil}
+	return &P2PServer{map[*P2PNode]bool{}, server_node, nil}
 }
 
 func (server *P2PServer)NewConnection(conn net.Conn) {

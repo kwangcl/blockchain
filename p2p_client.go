@@ -12,7 +12,7 @@ var CLIENT_MAX_CONNECTION = 2
 
 
 type P2PClient struct {
-	servers map[net.Conn]bool
+	servers map[*P2PNode]bool
 	node	*P2PNode
 	p2p_server *P2PServer
 }
@@ -20,7 +20,7 @@ type P2PClient struct {
 func NewP2PClient() *P2PClient {
 
 	client_node := NewNode(nil)
-	return &P2PClient{map[string]bool{}, client_node, nil}
+	return &P2PClient{map[*P2PNode]bool{}, client_node, nil}
 }
 
 func (client *P2PClient)ConnectServer(address string, port int) *P2PNode {
