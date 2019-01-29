@@ -58,7 +58,10 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 			//fmt.Println("size : " + strconv.Itoa(len(server.clients)))
 			//fmt.Println(client.address + " : " + client.port + " : " + msg[0])
 			//fmt.Println(msg)
-			switch msg[0] {
+			msg_type := byte[0]
+			src := byte[1:41]
+
+			switch msg_type {
 			case MSG_IP_BROADCAST :
 				fmt.Println("IP BROADCAST : " + client.address + ", " +  client.port)
 				client.outgoing <- MsgManager.ReceiveIPMsg()
@@ -106,6 +109,11 @@ func (server *P2PServer)CheckClientMapSize() bool {
 	return false
 }
 
+func (server *P2PServer)BroadCastMsg(msg []byte) {
+	for client, _ := range server.clients {
+			client.outgoing <- msg
+	}
+}
 
 
 func (server *P2PServer)CheckClientMap(address string) bool {

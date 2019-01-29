@@ -74,7 +74,9 @@ func (src_buffer *P2PSrcBuffer)CheckSrcBuf(src string) bool {
 }
 
 
-func (msg_manager *P2PMsgManager)IPBroadcastMsg() []byte {
+
+
+func (msg_manager *P2PMsgManager)IPBroadcastMsg(new_src []byte) []byte {
 	buf := make([]byte, MAX_MSG_BUF_SIZE)
 	buf[0] = byte(MSG_IP_BROADCAST)
 	src_buf := msg_manager.GenSrcData()
@@ -114,20 +116,20 @@ func (msg_manager *P2PMsgManager)RefuseConnMsg() []byte {
 	return buf
 }
 
-func (msg_manager *P2PMsgManager)SendTransactionMsg(data []byte) []byte {
+func (msg_manager *P2PMsgManager)SendTransactionMsg(data []byte, new_src []byte) []byte {
 	buf := make([]byte, len(data) + 1)
 	buf[0] = byte(MSG_SEND_TRANSACTION)
 	src_buf := msg_manager.GenSrcData()
 	copy(buf[1:], src_buf)
 
-	copy(buf[31:], data[:])
+	copy(buf[41:], data[:])
 	return buf
 }
 
 func (msg_manager *P2PMsgManager)GenSrcData() []byte {
 	str := msg_manager.src_buffer.address + "-"
 	str += strconv.FormatInt(time.Now().UnixNano(), 10)
-	buf := make([]byte, 30)
+	buf := make([]byte, 40)
 	copy(buf[:], str)
 	fmt.Println("G MSG 1 : " + str)
 	fmt.Println(buf)

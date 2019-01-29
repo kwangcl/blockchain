@@ -87,6 +87,13 @@ func (client *P2PClient)CheckServerMapSize() bool {
 }
 
 
+func (client *P2PClientr)BroadCastMsg(msg []byte) {
+	for server, _ := range client.servers {
+			server.outgoing <- msg
+	}
+}
+
+
 func (client *P2PClient)CheckServerMap(address string) bool {
     client_map_lock.RLock()
 	defer client_map_lock.RUnlock()

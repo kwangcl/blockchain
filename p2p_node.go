@@ -53,8 +53,8 @@ func (node *P2PNode)Read() {
 			node.state <- P2P_DEAD_CONN
 			break
 		} else {
-			if MsgManager.CheckNewMsg(buf[1:31]) {
-				fmt.Println(string(buf[1:31]))
+			if MsgManager.CheckNewMsg(buf[1:41]) {
+				fmt.Println(string(buf[1:41]))
 				node.incoming <- buf
 			}
 		}
