@@ -85,7 +85,7 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 				server.p2p_client.BroadCastMsg(msg)
 
 			case MSG_REQUEST_CONN :
-				log.Println("Log - [P2PServer] Connection full or duplicated")
+				log.Println("Log - [P2PServer] Reqeust connection : " + client.address)
 				if server.CheckNewConnection(client) {
 
 					client.outgoing <- MsgManager.ApproveConnMsg()
@@ -101,7 +101,7 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 				server.DeleteClientMap(client)
 				break loop
 			case P2P_DUP_MSG :
-				log.Println("Log - [P2PServer] Duplicated Msg")
+				log.Println("Log - [P2PServer] Duplicated msg")
 			}
 		}
 	}

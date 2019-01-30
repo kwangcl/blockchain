@@ -2,6 +2,7 @@ package main
 
 import (
 	"net"
+	"log"
 )
 
 type P2PNetState int
@@ -53,8 +54,10 @@ func (node *P2PNode)Read() {
 			break
 		} else {
 			if MsgManager.CheckNewMsg(buf[1:41]) {
-				node.state <- P2P_DUP_MSG
 				node.incoming <- buf
+			} else {
+				log.Println("Log - [P2PNode] Duplicated msg " + string[buf[1:41]])
+				node.state <- P2P_DUP_MSG
 			}
 		}
 	}
