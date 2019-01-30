@@ -56,7 +56,7 @@ func main() {
 				msg := []byte("temperature")
 				data := []byte(strconv.Itoa(rand.Intn(40 + 5) - 5))
 				tx := CreateTransaction(data, msg)
-				src_buf := msg_manager.GenSrcData()
+				src_buf := MsgManager.GenSrcData()
 				p2p_server.BroadCastMsg(MsgManager.SendTransactionMsg(tx.Serialize()), string(src_buf))
 				p2p_client.BroadCastMsg(MsgManager.SendTransactionMsg(tx.Serialize()), string(src_buf))
 				DeserializeTx(tx.Serialize()).PrintTxData()
