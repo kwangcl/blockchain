@@ -75,7 +75,7 @@ func (client *P2PClient)ConnectionHandler(server *P2PNode) {
 				log.Println("Log - [P2PClient] Server connection dead : " + server.address)
 				client.DeleteServerMap(server)
 			case P2P_DUP_MSG :
-				log.Println("Log - [P2PServer] Duplicated Msg : " + string(src))
+				log.Println("Log - [P2PServer] Duplicated Msg")
 			}
 		}
 	}

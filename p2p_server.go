@@ -77,7 +77,7 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 				} else if server.CheckNewConnection(client) {
 					log.Println("Log - [P2PServer] sand connection ready msg : " + client.address)
 					tmp_server := server.p2p_client.ConnectServer(client.address, SERVER_PORT)
-					server.p2p_client.ReadyConn(tmp_server)
+					server.p2p_client.ConnReady(tmp_server)
 				} else {
 					log.Println("Log - [P2PServer] Connection full or duplicated")
 				}
@@ -100,7 +100,7 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 				server.DeleteClientMap(client)
 				break loop
 			case P2P_DUP_MSG :
-				log.Println("Log - [P2PServer] Duplicated Msg : " + string(src))
+				log.Println("Log - [P2PServer] Duplicated Msg")
 			}
 		}
 	}
