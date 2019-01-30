@@ -65,7 +65,7 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 
 			msg_type := msg[0]
 			src := msg[1:41]
-			log.Println("Log - [P2PServer] Data source tag : " + string(src))	
+			log.Println("Log - [P2PServer] Data source tag : " + string(src))
 			switch msg_type {
 			case MSG_IP_BROADCAST :
 				client.outgoing <- MsgManager.ReceiveIPMsg()
@@ -74,10 +74,13 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 					log.Println("Log - [P2PServer] Connection request to new node : " + client.address)
 					tmp_server := server.p2p_client.ConnectServer(client.address, SERVER_PORT)
 					server.p2p_client.RequestConn(tmp_server)
+				} else if server.CheckNewConnection(client) {
+					log.Println("Log - [P2PServer] sand connection ready msg : " + client.address)
+					tmp_server := server.p2p_client.ConnectServer(client.address, SERVER_PORT)
+					server.p2p_client.ReadyConn(tmp_server)
 				} else {
 					log.Println("Log - [P2PServer] Connection full or duplicated")
 				}
-
 				server.BroadCastMsg(msg)
 
 			case MSG_REQUEST_CONN :
@@ -91,11 +94,13 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 				}
 			}
 		case state := <-client.state:
-			if state == P2P_DEAD_CONN {
+			switch state {
+			case P2P_DEAD_CONN :
 				log.Println("Log - [P2PServer] Client connection dead : " + client.address)
 				server.DeleteClientMap(client)
 				break loop
-			}
+			case P2P_DUP_MSG :
+				log.Println("Log - [P2PServer] Duplicated Msg : " + string(src))
 		}
 	}
 }

@@ -9,7 +9,7 @@ type P2PNetState int
 const (
 	P2P_INIT = iota
 	P2P_DEAD_CONN
-	P2P_WAIT_CONN
+	P2P_DUP_MSG
 )
 
 
@@ -53,6 +53,7 @@ func (node *P2PNode)Read() {
 			break
 		} else {
 			if MsgManager.CheckNewMsg(buf[1:41]) {
+				node.state <- P2P_DUP_MSG
 				node.incoming <- buf
 			}
 		}

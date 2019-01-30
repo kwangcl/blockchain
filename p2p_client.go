@@ -36,6 +36,9 @@ func (client *P2PClient)ConnectServer(address string, port int) *P2PNode {
 }
 
 func (client *P2PClient)NewConnection(conn net.Conn) *P2PNode {
+
+	log.Println("Log - [P2PClient] Request connection to server")
+
 	p2p_server := NewNode(conn)
 	go client.ConnectionHandler(p2p_server)
 
@@ -50,7 +53,7 @@ func (client *P2PClient)ConnectionHandler(server *P2PNode) {
 	loop : for {
 		select {
 		case msg := <-server.incoming :
-			log.Println("Log - [P2PClient] Get data from server : " + client.address)
+			log.Println("Log - [P2PClient] Get data from server : " + server.address)
 
 			msg_type := msg[0]
 			src := msg[1:41]
@@ -69,7 +72,10 @@ func (client *P2PClient)ConnectionHandler(server *P2PNode) {
 		case state := <-server.state:
 			switch state {
 			case P2P_DEAD_CONN :
+				log.Println("Log - [P2PClient] Server connection dead : " + server.address)
 				client.DeleteServerMap(server)
+			case P2P_DUP_MSG :
+				log.Println("Log - [P2PServer] Duplicated Msg : " + string(src))
 			}
 		}
 	}
@@ -135,6 +141,10 @@ func (client *P2PClient)RequestConn(server *P2PNode) {
 	server.outgoing <- buf
 }
 
+func (client *P2PClient)ConnReady(server *P2PNode) {
+	buf := MsgManager.ConnReadyMsg()
+	server.outgoing <- buf
+}
 
 func (client *P2PClient)PrintClientMap() {
 	for server, _ := range client.servers {

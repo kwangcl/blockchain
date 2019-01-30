@@ -17,6 +17,7 @@ const (
 	MSG_REQUEST_CONN
 	MSG_APPROVE_CONN
 	MSG_REFUSE_CONN
+	MSG_CONN_READY
 	MSG_SEND_TRANSACTION
 	//MSG
 	//MSG
@@ -111,6 +112,15 @@ func (msg_manager *P2PMsgManager)ApproveConnMsg() []byte {
 func (msg_manager *P2PMsgManager)RefuseConnMsg() []byte {
 	buf := make([]byte, MAX_MSG_BUF_SIZE)
 	buf[0] = byte(MSG_REFUSE_CONN)
+	src_buf := msg_manager.GenSrcData()
+	copy(buf[1:], src_buf)
+	return buf
+}
+
+
+func (msg_manager *P2PMsgManager)ConnReadyMsg() []byte {
+	buf := make([]byte, MAX_MSG_BUF_SIZE)
+	buf[0] = byte(MSG_CONN_READY)
 	src_buf := msg_manager.GenSrcData()
 	copy(buf[1:], src_buf)
 	return buf
