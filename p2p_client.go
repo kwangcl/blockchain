@@ -61,11 +61,13 @@ func (client *P2PClient)ConnectionHandler(server *P2PNode) {
 
 			switch msg_type {
 			case MSG_RECEIVE_IP :
+				log.Println("Log - [P2PClient] Receive IP & break connection")
 				break loop
 			case MSG_APPROVE_CONN :
-
+				log.Println("Log - [P2PClient] Approve connection from server : " + server.address)
 				client.WriteServerMap(server)
 			case MSG_REFUSE_CONN :
+			  log.Println("Log - [P2PClient] Refuse connection from server : " + server.address)
 				break loop
 			}
 
@@ -101,12 +103,12 @@ func (client *P2PClient)CheckServerMapSize() bool {
 
 
 func (client *P2PClient)BroadCastMsg(msg []byte) {
-
+	log.Println("Log -[P2PClient] BroadCastMsg : ")
 	for server, _ := range client.servers {
-			log.Println("Log -[P2PClient] BroadCastMsg : server IP - " + server.address)
+			log.Println("Log -[P2PClient] Server IP - " + server.address)
 			server.outgoing <- msg
 	}
-	log.Println(string(msg))
+	log.Println(msg)
 }
 
 
