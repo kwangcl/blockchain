@@ -69,9 +69,12 @@ func (client *P2PClient)ConnectionHandler(server *P2PNode) {
 }
 
 func (client *P2PClient)CheckNewConnection(server *P2PNode) bool{
-	if !client.CheckServerMap(server.address) && !client.p2p_server.CheckClientMap(server.address) {
+	if client.CheckServerMap(server.address) && client.p2p_server.CheckClientMap(server.address) {
+		fmt.Println("------?")
 		return client.CheckServerMapSize()
 	}
+	fmt.Println(" @ : " + server.address)
+	//fmt.Println(client.CheckServerMap(server.address) + " : " + string(len(client.servers)) )
 	return false
 }
 
