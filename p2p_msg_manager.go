@@ -4,7 +4,7 @@ import (
 	"sync"
 	"strconv"
 	"time"
-	"log"
+	_"log"
 )
 
 type MsgState int
@@ -143,14 +143,14 @@ func (msg_manager *P2PMsgManager)SendTransactionMsg(data []byte) []byte {
 	buf := make([]byte, MAX_MSG_BUF_SIZE)
 	buf[0] = byte(MSG_SEND_TRANSACTION)
 	src_buf := msg_manager.GenSrcData()
-	log.Println("---------------------------")
-	log.Println(src_buf)
-	log.Println(data)
+	//log.Println("---------------------------")
+	//log.Println(src_buf)
+	//log.Println(data)
 
 	copy(buf[1:], src_buf)
 	copy(buf[41:], data)
 
-		log.Println(buf)
+	//log.Println(buf)
 	return buf
 }
 func (msg_manager *P2PMsgManager)TransactionBroadCast(data []byte) {

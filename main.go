@@ -57,8 +57,8 @@ func main() {
 				data := []byte(strconv.Itoa(rand.Intn(40 + 5) - 5))
 				tx := CreateTransaction(data, msg)
 
-				p2p_server.BroadCastMsg(tx.Serialize(), "--")
-				p2p_client.BroadCastMsg(tx.Serialize(), "--")
+				p2p_server.BroadCastMsg(MsgManager.SendTransactionMsg(tx.Serialize()))
+				p2p_client.BroadCastMsg(MsgManager.SendTransactionMsg(tx.Serialize()))
 				DeserializeTx(tx.Serialize()).PrintTxData()
 				time.Sleep(5 * time.Second)
 				defer wg.Done()
