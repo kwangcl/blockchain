@@ -37,6 +37,20 @@ func main() {
 		tmp_server := p2p_client.ConnectServer(os.Args[1],SERVER_PORT)
 		p2p_client.BroadCastNewNode(tmp_server)
 
+		wg.Add(1)
+		go func() {
+			for {
+				msg := []byte("weight")
+				data := []byte(strconv.Itoa(rand.Intn(90 + 50) - 50))
+				tx := CreateTransaction(data, msg)
+				src_buf := MsgManager.GenSrcData()
+				p2p_server.BroadCastMsg(MsgManager.SendTransactionMsg(tx.Serialize()), string(src_buf))
+				p2p_client.BroadCastMsg(MsgManager.SendTransactionMsg(tx.Serialize()), string(src_buf))
+
+				time.Sleep(15* time.Second)
+				defer wg.Done()
+			}
+		}()
 
 		wg.Wait()
 	} else {
@@ -59,8 +73,8 @@ func main() {
 				src_buf := MsgManager.GenSrcData()
 				p2p_server.BroadCastMsg(MsgManager.SendTransactionMsg(tx.Serialize()), string(src_buf))
 				p2p_client.BroadCastMsg(MsgManager.SendTransactionMsg(tx.Serialize()), string(src_buf))
-				DeserializeTx(tx.Serialize()).PrintTxData()
-				time.Sleep(5 * time.Second)
+
+				time.Sleep(10 * time.Second)
 				defer wg.Done()
 			}
 		}()
