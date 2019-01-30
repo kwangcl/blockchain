@@ -14,6 +14,11 @@ type Transaction struct {
 }
 
 func CreateTransaction(data []byte, msg []byte) *Transaction{
+
+  log.Println("Log - [Transaction] Create Transaction")
+  log.Println("Log - [Transaction] Data : " + string(data[:]))
+  log.Println("Log - [Transaction] Msg : " + string(msg[:]))
+
 	tx := Transaction{[TRANSACTION_MAX_DATA_SIZE]byte{}, [TRANSACTION_MAX_MSG_SIZE]byte{}}
 	copy(tx.data[:], data)
 	copy(tx.msg[:], msg)

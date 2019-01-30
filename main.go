@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 	"fmt"
-	_"time"
+	"time"
 	"sync"
-	_"strconv"
+	"strconv"
 )
 
 
@@ -49,6 +49,16 @@ func main() {
 			p2p_server.StartServer()
 			defer wg.Done()
 		}()
+		wg.Add(1)
+		go func() {
+			for {
+				msg := []byte("temperature")
+				data := []byte(strconv.Itoa(rand.Intn(40 + 5) - 5))
+				tx := CreateTransaction()
+				time.Sleep(5 * time.Second)
+				defer wg.Done()
+			}
+		}
 
 		wg.Wait()
 	}
