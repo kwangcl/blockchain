@@ -56,7 +56,7 @@ func (node *P2PNode)Read() {
 			if MsgManager.CheckNewMsg(buf[1:41]) {
 				node.incoming <- buf
 			} else {
-				log.Println("Log - [P2PNode] Duplicated msg " + string[buf[1:41]])
+				log.Println("Log - [P2PNode] Duplicated msg " + string(buf[1:41]))
 				node.state <- P2P_DUP_MSG
 			}
 		}
