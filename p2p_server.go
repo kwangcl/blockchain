@@ -101,6 +101,7 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 				break loop
 			case P2P_DUP_MSG :
 				log.Println("Log - [P2PServer] Duplicated Msg : " + string(src))
+			}
 		}
 	}
 }
