@@ -20,8 +20,8 @@ type P2PServer struct {
 
 
 func NewP2PServer(port int) *P2PServer {
-	
-	log.Println("Log - New P2P Server")
+
+	log.Println("Log - [P2PServer] New P2P server")
 
 	server_node := NewNode(nil)
 	server_node.port = strconv.Itoa(port)
@@ -30,7 +30,7 @@ func NewP2PServer(port int) *P2PServer {
 
 func (server *P2PServer)NewConnection(conn net.Conn) {
 
-	log.Println("Log - New Server Connection")
+	log.Println("Log - [P2PServer] New connection req")
 
 	p2p_client := NewNode(conn)
 	go server.ClientHandler(p2p_client)
@@ -38,8 +38,8 @@ func (server *P2PServer)NewConnection(conn net.Conn) {
 
 
 func (server *P2PServer)StartServer() {
-	
-	log.Println("Log - Start P2P Server")
+
+	log.Println("Log - [P2PServer] Start P2P server")
 
 	listener, err := net.Listen("tcp", ":" + server.node.port)
 	ErrorHandler(err)
@@ -61,24 +61,29 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 	loop : for {
 		select {
 		case msg := <-client.incoming:
+			log.Println("Log - [P2PServer] Get data from client : " + client.address)
 
 			msg_type := msg[0]
-			//src := msg[1:41]
-
+			src := msg[1:41]
+			log.Println("Log - [P2PServer] Data source tag : " + string(src))	
 			switch msg_type {
 			case MSG_IP_BROADCAST :
 				client.outgoing <- MsgManager.ReceiveIPMsg()
-
+				log.Println("Log - [P2PServer] IP broadcast : " + client.address)
 				if server.p2p_client.CheckNewConnection(client) {
+					log.Println("Log - [P2PServer] Connection request to new node : " + client.address)
 					tmp_server := server.p2p_client.ConnectServer(client.address, SERVER_PORT)
 					server.p2p_client.RequestConn(tmp_server)
 				} else {
-					log.Println("Log - ")
+					log.Println("Log - [P2PServer] Connection full or duplicated")
 				}
+
 				server.BroadCastMsg(msg)
 
 			case MSG_REQUEST_CONN :
+				log.Println("Log - [P2PServer] Connection full or duplicated")
 				if server.CheckNewConnection(client) {
+
 					client.outgoing <- MsgManager.ApproveConnMsg()
 					server.WriteClientMap(client)
 				} else {
@@ -87,6 +92,7 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 			}
 		case state := <-client.state:
 			if state == P2P_DEAD_CONN {
+				log.Println("Log - [P2PServer] Client connection dead : " + client.address)
 				server.DeleteClientMap(client)
 				break loop
 			}
@@ -98,7 +104,7 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 func (server *P2PServer)CheckNewConnection(client *P2PNode) bool {
 	if server.CheckClientMap(client.address) && server.p2p_client.CheckServerMap(client.address) {
 		return server.CheckClientMapSize()
-  	}
+  }
 	return false
 }
 
@@ -143,4 +149,10 @@ func (server *P2PServer)DeleteClientMap(client *P2PNode) {
 	server_map_lock.Lock()
 	defer server_map_lock.Unlock()
 	delete(server.clients, client)
+}
+
+func (server *P2PServer)PrintServerMap() {
+	for client, _ := range server.clients {
+		log.Println("Log - [P2PServer] Print server map : client IP - " + client.address)
+	}
 }

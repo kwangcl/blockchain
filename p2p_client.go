@@ -19,11 +19,16 @@ type P2PClient struct {
 
 func NewP2PClient() *P2PClient {
 
+	log.Println("Log - [P2PClient] New P2P client")
+
 	client_node := NewNode(nil)
 	return &P2PClient{map[*P2PNode]bool{}, client_node, nil}
 }
 
 func (client *P2PClient)ConnectServer(address string, port int) *P2PNode {
+
+	log.Println("Log - [P2PClient] Connect server : " + address)
+
 	server_port := strconv.Itoa(port)
 	conn, err := net.Dial("tcp", address + ":" + server_port)
 	ErrorHandler(err)
@@ -69,11 +74,8 @@ func (client *P2PClient)ConnectionHandler(server *P2PNode) {
 
 func (client *P2PClient)CheckNewConnection(server *P2PNode) bool{
 	if client.CheckServerMap(server.address) && client.p2p_server.CheckClientMap(server.address) {
-		fmt.Println("------?")
 		return client.CheckServerMapSize()
 	}
-	fmt.Println(" @ : " + server.address)
-	//fmt.Println(client.CheckServerMap(server.address) + " : " + string(len(client.servers)) )
 	return false
 }
 
@@ -128,4 +130,11 @@ func (client *P2PClient)IPBroadcast(server *P2PNode) {
 func (client *P2PClient)RequestConn(server *P2PNode) {
 	buf := MsgManager.RequestConnMsg()
 	server.outgoing <- buf
+}
+
+
+func (client *P2PClient)PrintClientMap() {
+	for server, _ := range client.servers {
+		log.Println("Log - [P2PClinet] Print server map : server IP - " + server.address)
+	}
 }

@@ -54,7 +54,6 @@ func (node *P2PNode)Read() {
 			break
 		} else {
 			if MsgManager.CheckNewMsg(buf[1:41]) {
-				fmt.Println(string(buf[1:41]))
 				node.incoming <- buf
 			}
 		}
