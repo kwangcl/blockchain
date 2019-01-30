@@ -18,7 +18,6 @@ func GetIPv4Address() string{
 	for _, addr := range addrs {
 		if ip_net, ok := addr.(*net.IPNet); ok && !ip_net.IP.IsLoopback() {
 			if ip_net.IP.To4() != nil {
-
 				str =  ip_net.IP.String()
 				log.Println(str)
 			}
