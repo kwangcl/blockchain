@@ -85,8 +85,8 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 					log.Println("Log - [P2PServer] Connection full or duplicated")
 				}
 				new_msg := MsgManager.IPBroadcastMsg(src)
-				server.BroadCastMsg(msg, client.address)
-				server.p2p_client.BroadCastMsg(msg, client.address)
+				server.BroadCastMsg(new_msg, client.address)
+				server.p2p_client.BroadCastMsg(new_msg, client.address)
 
 			case MSG_REQUEST_CONN :
 				log.Println("Log - [P2PServer] Reqeust connection : " + client.address)
