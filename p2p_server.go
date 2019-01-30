@@ -103,6 +103,8 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 					fallthrough
 				case MSG_TRANSACTION_BROADCAST :
 					log.Println("Log - [P2PServer] Transaction broadcast")
+					tx := DeserializeTx(msg[41:])
+					tx.PrintTxData()
 					server.BroadCastMsg(msg, client.address)
 					server.p2p_client.BroadCastMsg(msg, client.address)
 

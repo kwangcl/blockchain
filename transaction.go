@@ -22,8 +22,8 @@ func CreateTransaction(data []byte, msg []byte) *Transaction{
 
 func (tx *Transaction) PrintTxData() {
   log.Println("Log - [Transaction] Print transaction")
-  log.Println("Log - [Transaction] Data : " + string(tx.data))
-  log.Println("Log - [Transaction] Msg : " + string(tx.msg))
+  log.Println("Log - [Transaction] Data : " + string(tx.data[:]))
+  log.Println("Log - [Transaction] Msg : " + string(tx.msg[:]))
 }
 
 
