@@ -82,6 +82,7 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 					log.Println("Log - [P2PServer] Connection full or duplicated")
 				}
 				server.BroadCastMsg(msg)
+				server.p2p_client.BroadCastMsg(msg)
 
 			case MSG_REQUEST_CONN :
 				log.Println("Log - [P2PServer] Connection full or duplicated")
@@ -125,11 +126,12 @@ func (server *P2PServer)CheckClientMapSize() bool {
 }
 
 func (server *P2PServer)BroadCastMsg(msg []byte) {
-	log.Println("Log - BroadCastMsg : ")
-	log.Println(msg)
+
 	for client, _ := range server.clients {
+			log.Println("Log -[P2PServer] BroadCastMsg : client IP - " + client.address)
 			client.outgoing <- msg
 	}
+	log.Println(msg)
 }
 
 

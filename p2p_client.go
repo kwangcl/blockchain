@@ -101,9 +101,12 @@ func (client *P2PClient)CheckServerMapSize() bool {
 
 
 func (client *P2PClient)BroadCastMsg(msg []byte) {
+
 	for server, _ := range client.servers {
+			log.Println("Log -[P2PClient] BroadCastMsg : server IP - " + server.address)
 			server.outgoing <- msg
 	}
+	log.Println(string(msg))
 }
 
 
