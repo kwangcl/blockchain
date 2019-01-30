@@ -28,13 +28,15 @@ func main() {
 
 		p2p_client.p2p_server = p2p_server
 		p2p_server.p2p_client = p2p_client
-        wg.Add(1)
+    wg.Add(1)
 		go func() {
 			p2p_server.StartServer()
 			defer wg.Done()
 		}()
 		tmp_server := p2p_client.ConnectServer(os.Args[1],SERVER_PORT)
-		p2p_client.IPBroadcast(tmp_server)
+		p2p_client.BroadCastNewNode(tmp_server)
+
+
 		wg.Wait()
 	} else {
     	p2p_client := NewP2PClient()

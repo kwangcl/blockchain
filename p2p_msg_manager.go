@@ -4,7 +4,6 @@ import (
 	"sync"
 	"strconv"
 	"time"
-	"fmt"
 )
 
 type MsgState int
@@ -12,7 +11,9 @@ type MsgState int
 const MAX_MSG_BUF_SIZE = 1024
 const MAX_SRC_BUF_SIZE = 1000
 const (
-	MSG_IP_BROADCAST = iota
+	MSG_NEW_NODE = iota
+	MSG_RECEVIE_NEW_INFO
+	MSG_IP_BROADCAST
 	MSG_RECEIVE_IP
 	MSG_REQUEST_CONN
 	MSG_APPROVE_CONN
@@ -76,12 +77,19 @@ func (src_buffer *P2PSrcBuffer)CheckSrcBuf(src string) bool {
 
 
 
-
-func (msg_manager *P2PMsgManager)IPBroadcastMsg() []byte {
+func (msg_manager *P2PMsgManager)NewNodeMsg() []byte {
 	buf := make([]byte, MAX_MSG_BUF_SIZE)
-	buf[0] = byte(MSG_IP_BROADCAST)
+	buf[0] = byte(MSG_NEW_NODE)
 	src_buf := msg_manager.GenSrcData()
 	copy(buf[1:], src_buf)
+	return buf
+}
+
+
+func (msg_manager *P2PMsgManager)IPBroadcastMsg(src []byte) []byte {
+	buf := make([]byte, MAX_MSG_BUF_SIZE)
+	buf[0] = byte(MSG_IP_BROADCAST)
+	copy(buf[1:41], src)
 	return buf
 }
 
@@ -141,7 +149,12 @@ func (msg_manager *P2PMsgManager)GenSrcData() []byte {
 	str += strconv.FormatInt(time.Now().UnixNano(), 10)
 	buf := make([]byte, 40)
 	copy(buf[:], str)
-	fmt.Println("G MSG 1 : " + str)
-	fmt.Println(buf)
+
+	if len(msg_manager.src_buffer.queue) == MAX_SRC_BUF_SIZE {
+		msg_manager.src_buffer.queue = src_buffer.queue[100:]
+	}
+	msg_manager.src_buffer.queue = append(src_buffer.queue, src)
+	msg_manager.src_buffer.msg_map[src] = true
+
 	return buf[:]
 }

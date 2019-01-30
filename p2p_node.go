@@ -82,7 +82,3 @@ func (node *P2PNode) ConnectionCheck(err error) bool {
 	}
 	return true
 }
-
-func (node *P2PNode) HashKey() string {
-	return node.address
-}

@@ -67,8 +67,11 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 			src := msg[1:41]
 			log.Println("Log - [P2PServer] Data source tag : " + string(src))
 			switch msg_type {
+			case MSG_NEW_NODE :
+					log.Println("Log - [P2PServer] New Node!")
+					client.outgoing <- MsgManager.ReceiveIPMsg()
+					fallthrough
 			case MSG_IP_BROADCAST :
-				client.outgoing <- MsgManager.ReceiveIPMsg()
 				log.Println("Log - [P2PServer] IP broadcast : " + client.address)
 				if server.p2p_client.CheckNewConnection(client) {
 					log.Println("Log - [P2PServer] Connection request to new node : " + client.address)
@@ -81,8 +84,9 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 				} else {
 					log.Println("Log - [P2PServer] Connection full or duplicated")
 				}
-				server.BroadCastMsg(msg)
-				server.p2p_client.BroadCastMsg(msg)
+				new_msg := MsgMananger.IPBroadcastMsg(src)
+				server.BroadCastMsg(msg, client.address)
+				server.p2p_client.BroadCastMsg(msg, client.address)
 
 			case MSG_REQUEST_CONN :
 				log.Println("Log - [P2PServer] Reqeust connection : " + client.address)
@@ -125,11 +129,13 @@ func (server *P2PServer)CheckClientMapSize() bool {
 	return false
 }
 
-func (server *P2PServer)BroadCastMsg(msg []byte) {
+func (server *P2PServer)BroadCastMsg(msg []byte, src string) {
 	log.Println("Log -[P2PServer] BroadCastMsg : ")
 	for client, _ := range server.clients {
+		if client.address != src {
 			log.Println("Log -[P2PServer] Client IP - " + client.address)
 			client.outgoing <- msg
+		}
 	}
 	log.Println(msg)
 }

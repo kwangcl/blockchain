@@ -102,11 +102,13 @@ func (client *P2PClient)CheckServerMapSize() bool {
 }
 
 
-func (client *P2PClient)BroadCastMsg(msg []byte) {
+func (client *P2PClient)BroadCastMsg(msg []byte, src string) {
 	log.Println("Log -[P2PClient] BroadCastMsg : ")
 	for server, _ := range client.servers {
+		if server.address != src {
 			log.Println("Log -[P2PClient] Server IP - " + server.address)
 			server.outgoing <- msg
+		}
 	}
 	log.Println(msg)
 }
@@ -136,10 +138,18 @@ func (client *P2PClient)DeleteServerMap(server *P2PNode) {
     delete(client.servers, server)
 }
 
+
+func (client *P2PClient)BroadCastNewNode(server *P2PNode) {
+	buf := MsgManager.NewNodeMsg()
+	server.outgoing <- buf
+}
+
+/*
 func (client *P2PClient)IPBroadcast(server *P2PNode) {
 	buf := MsgManager.IPBroadcastMsg()
 	server.outgoing <- buf
-}
+}*/
+
 
 func (client *P2PClient)RequestConn(server *P2PNode) {
 	buf := MsgManager.RequestConnMsg()
