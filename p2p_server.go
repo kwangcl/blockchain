@@ -94,8 +94,10 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 
 func (server *P2PServer)CheckNewConnection(client *P2PNode) bool {
 	if !server.CheckClientMap(client.address) && !server.p2p_client.CheckServerMap(client.address) {
+		fmt.Println("!---")
 		return server.CheckClientMapSize()
-  }
+  	}
+	fmt.Println("33333")
 	return false
 }
 
