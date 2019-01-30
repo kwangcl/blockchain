@@ -20,6 +20,7 @@ const (
 	MSG_REFUSE_CONN
 	MSG_CONN_READY
 	MSG_SEND_TRANSACTION
+	MSG_TRANSACTION_BROADCAST
 	//MSG
 	//MSG
 	//MSG
@@ -94,6 +95,8 @@ func (msg_manager *P2PMsgManager)IPBroadcastMsg(src []byte) []byte {
 	return buf
 }
 
+
+
 func (msg_manager *P2PMsgManager)ReceiveIPMsg() []byte {
 	buf := make([]byte, MAX_MSG_BUF_SIZE)
 	buf[0] = byte(MSG_RECEIVE_IP)
@@ -135,15 +138,21 @@ func (msg_manager *P2PMsgManager)ConnReadyMsg() []byte {
 	return buf
 }
 
-func (msg_manager *P2PMsgManager)SendTransactionMsg(data []byte, new_src []byte) []byte {
-	buf := make([]byte, len(data) + 1)
+func (msg_manager *P2PMsgManager)SendTransactionMsg(data []byte) []byte {
+	buf := make([]byte, MAX_MSG_BUF_SIZE)
 	buf[0] = byte(MSG_SEND_TRANSACTION)
 	src_buf := msg_manager.GenSrcData()
 	copy(buf[1:], src_buf)
-
 	copy(buf[41:], data[:])
 	return buf
 }
+func (msg_manager *P2PMsgManager)TransactionBroadCast(data []byte) {
+	data[0] = byte(MSG_TRANSACTION_BROADCAST)
+}
+
+
+
+
 
 func (msg_manager *P2PMsgManager)GenSrcData() []byte {
 	str := msg_manager.src_buffer.address + "-"

@@ -69,6 +69,15 @@ func (client *P2PClient)ConnectionHandler(server *P2PNode) {
 			case MSG_REFUSE_CONN :
 			  log.Println("Log - [P2PClient] Refuse connection from server : " + server.address)
 				break loop
+
+			case MSG_SEND_TRANSACTION :
+				log.Println("Log - [P2PClient] New Transaction from server!")
+				MsgManager.TransactionBroadCast(msg)
+				fallthrough
+			case MSG_TRANSACTION_BROADCAST :
+				log.Println("Log - [P2PClient] Transaction broadcast")
+				client.BroadCastMsg(msg, server.address)
+				client.p2p_server.BroadCastMsg(msg, server.address)
 			}
 
 		case state := <-server.state:

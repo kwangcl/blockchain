@@ -68,9 +68,9 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 			log.Println("Log - [P2PServer] Data source tag : " + string(src))
 			switch msg_type {
 			case MSG_NEW_NODE :
-					log.Println("Log - [P2PServer] New Node!")
-					client.outgoing <- MsgManager.ReceiveIPMsg()
-					fallthrough
+				log.Println("Log - [P2PServer] New Node!")
+				client.outgoing <- MsgManager.ReceiveIPMsg()
+				fallthrough
 			case MSG_IP_BROADCAST :
 				log.Println("Log - [P2PServer] IP broadcast : " + client.address)
 				if server.p2p_client.CheckNewConnection(client) {
@@ -97,6 +97,15 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 				} else {
 					client.outgoing <- MsgManager.RefuseConnMsg()
 				}
+				case MSG_SEND_TRANSACTION :
+					log.Println("Log - [P2PServer] New Transaction from client!")
+					MsgManager.TransactionBroadCast(msg)
+					fallthrough
+				case MSG_TRANSACTION_BROADCAST :
+					log.Println("Log - [P2PServer] Transaction broadcast")
+					server.BroadCastMsg(msg, client.address)
+					server.p2p_client.BroadCastMsg(msg, client.address)
+
 			}
 		case state := <-client.state:
 			switch state {
