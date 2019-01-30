@@ -18,10 +18,19 @@ func GetIPv4Address() string{
 	for _, addr := range addrs {
 		if ip_net, ok := addr.(*net.IPNet); ok && !ip_net.IP.IsLoopback() {
 			if ip_net.IP.To4() != nil {
-				str =  ip_net.IP.String()
-				log.Println(str)
+				return ip_net.IP.String()
 			}
 		}
 	}
 	return "127.0.0.1"
 }
+
+/*
+func GetOutboundIP() string {
+    conn, err := net.Dial("udp", "8.8.8.8:80")
+    HandleError("net.Dial: ",err)
+    defer conn.Close()
+    localAddr := conn.LocalAddr().String()
+    idx := strings.LastIndex(localAddr, ":")
+    return localAddr[0:idx]
+}*/

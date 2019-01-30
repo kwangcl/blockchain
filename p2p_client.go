@@ -121,7 +121,7 @@ func (client *P2PClient)BroadCastMsg(msg []byte, src string) {
 			server.outgoing <- msg
 		}
 	}
-	log.Println(msg)
+	//log.Println(msg)
 }
 
 

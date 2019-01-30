@@ -59,6 +59,7 @@ func main() {
 
 				p2p_server.BroadCastMsg(tx.Serialize(), "--")
 				p2p_client.BroadCastMsg(tx.Serialize(), "--")
+				DeserializeTx(tx.Serialize()).PrintTxData()
 				time.Sleep(5 * time.Second)
 				defer wg.Done()
 			}
