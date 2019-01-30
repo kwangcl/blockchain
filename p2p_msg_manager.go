@@ -64,6 +64,10 @@ func (src_buffer *P2PSrcBuffer)CheckSrcBuf(src string) bool {
 	if src_buffer.CheckSrcDuplicate(src) {
 		return false
 	}
+	src_buffer.WriteSrcBuf(src)
+	return true
+}
+func (src_buffer *P2PSrcBuffer)WriteSrcBuf(src string) {
 	src_buffer_lock.Lock()
 	defer src_buffer_lock.Unlock()
 	if len(src_buffer.queue) == MAX_SRC_BUF_SIZE {
@@ -71,10 +75,7 @@ func (src_buffer *P2PSrcBuffer)CheckSrcBuf(src string) bool {
 	}
 	src_buffer.queue = append(src_buffer.queue, src)
 	src_buffer.msg_map[src] = true
-
-	return true
 }
-
 
 
 func (msg_manager *P2PMsgManager)NewNodeMsg() []byte {
@@ -150,11 +151,7 @@ func (msg_manager *P2PMsgManager)GenSrcData() []byte {
 	buf := make([]byte, 40)
 	copy(buf[:], str)
 
-	if len(msg_manager.src_buffer.queue) == MAX_SRC_BUF_SIZE {
-		msg_manager.src_buffer.queue = src_buffer.queue[100:]
-	}
-	msg_manager.src_buffer.queue = append(src_buffer.queue, src)
-	msg_manager.src_buffer.msg_map[src] = true
+	msg_manager.src_buffer.WriteSrcBuf(str)
 
 	return buf[:]
 }
