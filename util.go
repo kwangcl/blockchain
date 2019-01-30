@@ -13,11 +13,14 @@ func ErrorHandler(err error) {
 
 func GetIPv4Address() string{
 	addrs, err := net.InterfaceAddrs()
-    ErrorHandler(err)
+  ErrorHandler(err)
+	var str string
 	for _, addr := range addrs {
 		if ip_net, ok := addr.(*net.IPNet); ok && !ip_net.IP.IsLoopback() {
 			if ip_net.IP.To4() != nil {
-				return ip_net.IP.String()
+
+				str =  ip_net.IP.String()
+				log.Println(str)
 			}
 		}
 	}

@@ -55,7 +55,7 @@ func main() {
 			for {
 				msg := []byte("temperature")
 				data := []byte(strconv.Itoa(rand.Intn(40 + 5) - 5))
-				tx := CreateTransaction()
+				tx := CreateTransaction(data, msg)
 				time.Sleep(5 * time.Second)
 				defer wg.Done()
 			}
