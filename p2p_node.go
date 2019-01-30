@@ -2,7 +2,6 @@ package main
 
 import (
 	"net"
-	"fmt"
 )
 
 type P2PNetState int

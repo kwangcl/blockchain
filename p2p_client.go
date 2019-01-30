@@ -3,7 +3,7 @@ package main
 import (
 	"net"
 	"strconv"
-	"fmt"
+	"log"
 	"sync"
 )
 
@@ -50,22 +50,25 @@ func (client *P2PClient)ConnectionHandler(server *P2PNode) {
 	loop : for {
 		select {
 		case msg := <-server.incoming :
-			switch msg[0] {
+			log.Println("Log - [P2PClient] Get data from server : " + client.address)
+
+			msg_type := msg[0]
+			src := msg[1:41]
+			log.Println("Log - [P2PClient] Data source tag : " + string(src))
+
+			switch msg_type {
 			case MSG_RECEIVE_IP :
 				break loop
 			case MSG_APPROVE_CONN :
-				fmt.Println("APPROVE !")
+
 				client.WriteServerMap(server)
-				fmt.Println("Gooo : "  + strconv.Itoa(len(client.servers)))
 			case MSG_REFUSE_CONN :
-				fmt.Println("Refuse....")
 				break loop
 			}
 
 		case state := <-server.state:
 			switch state {
 			case P2P_DEAD_CONN :
-				fmt.Println("DEAD====")
 				client.DeleteServerMap(server)
 			}
 		}
