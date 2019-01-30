@@ -10,7 +10,7 @@ import (
 var server_map_lock = sync.RWMutex{}
 
 const SERVER_MAX_CONNECTION = 2
-const SERVER_MSG_PORT = 7777
+const SERVER_PORT = 7777
 
 type P2PServer struct {
 	clients map[*P2PNode] bool
@@ -59,7 +59,7 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 			//fmt.Println(client.address + " : " + client.port + " : " + msg[0])
 			//fmt.Println(msg)
 			msg_type := msg[0]
-			src := msg[1:41]
+			//src := msg[1:41]
 
 			switch msg_type {
 			case MSG_IP_BROADCAST :
@@ -67,7 +67,7 @@ func (server *P2PServer)ClientHandler(client *P2PNode) {
 				client.outgoing <- MsgManager.ReceiveIPMsg()
 
 				if server.p2p_client.CheckNewConnection(client) {
-					tmp_server := server.p2p_client.ConnectServer(client.address, 6667)
+					tmp_server := server.p2p_client.ConnectServer(client.address, SERVER_PORT)
 					server.p2p_client.RequestConn(tmp_server)
 				} else {
 					fmt.Println("Already")
