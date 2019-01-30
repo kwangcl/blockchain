@@ -9,8 +9,8 @@ const TRANSACTION_MAX_DATA_SIZE = 256
 const TRANSACTION_MAX_MSG_SIZE = 128
 
 type Transaction struct {
-  data [TRANSACTION_MAX_DATA_SIZE]byte
-	msg  [TRANSACTION_MAX_MSG_SIZE]byte
+  Data [TRANSACTION_MAX_DATA_SIZE]byte
+	Msg  [TRANSACTION_MAX_MSG_SIZE]byte
 }
 
 func CreateTransaction(data []byte, msg []byte) *Transaction{
@@ -20,15 +20,15 @@ func CreateTransaction(data []byte, msg []byte) *Transaction{
   log.Println("Log - [Transaction] Msg : " + string(msg[:]))
 
 	tx := Transaction{[TRANSACTION_MAX_DATA_SIZE]byte{}, [TRANSACTION_MAX_MSG_SIZE]byte{}}
-	copy(tx.data[:], data)
-	copy(tx.msg[:], msg)
+	copy(tx.Data[:], data)
+	copy(tx.Msg[:], msg)
 	return &tx
 }
 
 func (tx *Transaction) PrintTxData() {
   log.Println("Log - [Transaction] Print transaction")
-  log.Println("Log - [Transaction] Data : " + string(tx.data[:]))
-  log.Println("Log - [Transaction] Msg : " + string(tx.msg[:]))
+  log.Println("Log - [Transaction] Data : " + string(tx.Data[:]))
+  log.Println("Log - [Transaction] Msg : " + string(tx.Msg[:]))
 }
 
 
