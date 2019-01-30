@@ -47,7 +47,6 @@ func (client *P2PClient)ConnectionHandler(server *P2PNode) {
 		case msg := <-server.incoming :
 			switch msg[0] {
 			case MSG_RECEIVE_IP :
-				fmt.Println("BROADCAST OK")
 				break loop
 			case MSG_APPROVE_CONN :
 				fmt.Println("APPROVE !")
