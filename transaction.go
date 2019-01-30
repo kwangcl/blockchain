@@ -1,8 +1,9 @@
 package main
 
 import (
-  "bytes" 
+  "bytes"
   "encoding/gob"
+  "log"
 )
 const TRANSACTION_MAX_DATA_SIZE = 256
 const TRANSACTION_MAX_MSG_SIZE = 128
@@ -19,6 +20,13 @@ func CreateTransaction(data []byte, msg []byte) *Transaction{
 	return &tx
 }
 
+func (tx *Transaction) PrintTxData() {
+  log.Println("Log - [Transaction] Print transaction")
+  log.Println("Log - [Transaction] Data : " + string(tx.data))
+  log.Println("Log - [Transaction] Msg : " + string(tx.msg))
+}
+
+
 func (tx *Transaction) Serialize() []byte {
   var result bytes.Buffer
 
@@ -26,8 +34,9 @@ func (tx *Transaction) Serialize() []byte {
   err := encoder.Encode(tx)
   ErrorHandler(err)
 
-  return tx.Bytes()
+  return result.Bytes()
 }
+
 
 func DeserializeTx(data []byte) *Transaction {
   var tx Transaction
@@ -36,5 +45,5 @@ func DeserializeTx(data []byte) *Transaction {
   err := decoder.Decode(&tx)
   ErrorHandler(err)
 
-  return *tx
+  return &tx
 }
